@@ -75,7 +75,6 @@ class Resume(db.Model):
     hair = db.Column(db.String(140))
     breakfast = db.Column(db.String(140))
 
-
     def set_fields(self, form: CVform):
         self.firstname = form.firstname.data
         self.lastname = form.lastname.data

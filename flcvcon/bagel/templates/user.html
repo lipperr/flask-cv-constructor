@@ -2,10 +2,17 @@
 
 {% block content %}
 <h1>User: {{ user.username }}</h1>
-{% for topic in topics %}
-    <tr>{{topic }} : {{ resume|attr(topic) }}</tr>
-{% endfor %}
+{% if resumes %}
+<ul>
+    <ul>{% for resume in resumes %}
+        <h3>Another one!</h3>
+            {% for topic in topics %}
+                <li>{{topic }} : {{ resume|attr(topic) }}</li>
+            {% endfor %}
+        <p>Download as PDF <a href="{{ url_for('download', file_id=resume.id) }}">Click!</a></p>
+    </ul>{%endfor%}
+</ul>
 
-<p>Download as PDF <a href="{{ url_for('download') }}">Click!</a></p>
+{% endif %}
 {% endblock %}
 

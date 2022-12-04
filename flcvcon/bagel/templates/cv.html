@@ -6,8 +6,10 @@
 </head>
 <body>
     <h2>My resume</h2>
-        {% for topic in topics %}
-            <h3>{{topic }} : {{ resume|attr(topic) }}</h3>
-        {% endfor %}
+        <ul>
+            {% for topic in topics %}
+            <li>{{topic }} : {{ resume|attr(topic) }}</li>
+            {% endfor %}
+        </ul>
 </body>
 </html>

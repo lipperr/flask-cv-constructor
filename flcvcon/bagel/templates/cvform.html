@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Make your resume</h1>
+
     <form method="post" action="/cvform" novalidate>
+        <p>
+            <h2>Make your resume!</h2>
+
         {{ form.hidden_tag() }}
         <p>
             {{ form.firstname.label }}<br>

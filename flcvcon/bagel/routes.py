@@ -15,7 +15,9 @@ def hello_world():
 def cvform():
     form = CVform()
     if not current_user.is_authenticated:
-        flash('log in first!')
+        flash('Please log in first!')
+        return redirect(url_for('hello_world'))
+
     if form.validate_on_submit():
         resume = Resume(user_id=current_user.id)
         resume.set_fields(form)
@@ -23,8 +25,7 @@ def cvform():
         db.session.commit()
         return redirect(url_for('hello_world'))
 
-    im = Resume.query.filter_by(author=user).first()
-    return render_template('cvform.html', image=im if im else None, form=form)
+    return render_template('cvform.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,18 +78,20 @@ def redirect_to_signin(response):
     return response
 
 
-@app.route('/user/<username>')
-@login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    resume = Resume.query.filter_by(author=user).first()
-    return render_template('user.html', user=user, resume=resume, topics=CVQuestions)
+@app.route('/user')
+def user():
+    if current_user.is_authenticated:
+        user = User.query.filter_by(username=current_user.username).first_or_404()
+        resumes = Resume.query.filter_by(author=user).all()
+        return render_template('user.html', user=user, resumes=resumes, topics=CVQuestions)
+    else:
+        flash('Please log in to see your personal page!')
+        return redirect(url_for('hello_world'))
 
 
-@app.route('/download')
-def download():
-    user = User.query.filter_by(id=current_user.id).first_or_404()
-    resume = Resume.query.filter_by(author=user).first()
+@app.route('/download/<file_id>')
+def download(file_id):
+    resume = Resume.query.get(file_id)
     config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
     text = render_template('cv.html', resume=resume, topics=CVQuestions)
     pdfkit.from_string(text, output_path='/Users/annal/cv_constructor/flcvcon/out.pdf', configuration=config)
@@ -97,4 +100,3 @@ def download():
         return send_file(exact_path, as_attachment=True)
     except Exception as e:
         return str(e)
-
