@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %} - FlaskApp</title>
+    <style>
+        .title {
+            margin: 5px;
+        }
+        .content {
+            margin: 5px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #d64161;
+            font-size: 2em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+            <li><h1>{{ message }}</h1></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<body>
+    <nav>
+        <a href="{{ url_for('hello_world') }}">Home</a>
+        <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+        <a href="{{ url_for('cvform') }}">Make a CV</a>
+        <a href="{{url_for('login_page')}}">Log in</a>
+        <a href="{{url_for('register')}}">Register</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    <hr>
+    <div class="content">
+        {% block content %} {% endblock %}
+    </div>
+    <p class="mt-5 mb-3 text-muted">&copy; Anna Markovich 2022</p>
+</body>
+</html>
